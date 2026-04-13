@@ -1,0 +1,4 @@
+@EndUserText.label: 'Service Def for Gym Analytics'
+define service ZUI_GYMMEMBER_ADV {
+  expose ZC_GymMember_Adv as GymMember;
+}

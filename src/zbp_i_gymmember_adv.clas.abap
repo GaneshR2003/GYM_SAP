@@ -1,0 +1,5 @@
+CLASS zbp_i_gymmember_adv DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_gymmember_adv.
+ENDCLASS.
+
+CLASS zbp_i_gymmember_adv IMPLEMENTATION.
+ENDCLASS.

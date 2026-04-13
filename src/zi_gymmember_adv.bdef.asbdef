@@ -1,0 +1,48 @@
+unmanaged implementation in class zbp_i_gymmember_adv unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_GymMember_Adv alias GymMember
+draft table zdraft_gym_mem
+lock master total etag last_visit_days
+authorization master ( instance )
+{
+  field ( readonly, numbering : managed ) member_id;
+
+  create;
+  update;
+  delete;
+
+  // Validation: Checks data quality on save
+  validation validateAttendance on save { field attendance_rate; create; update; }
+
+  // Determination: Auto-calculates Member Type on the fly
+  determination calculateMemberType on modify { field attendance_rate; }
+
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+
+  // CORRECTED: Use simple names without prefixes
+  draft determine action Prepare {
+    validation validateAttendance;
+  }
+
+  action simulateRetention parameter Z_D_SimulateRetention result [1] $self;
+
+  side effects {
+    action simulateRetention affects field PredictionScore, field StatusCriticality;
+    field attendance_rate affects field PredictionScore, field StatusCriticality, field member_type;
+  }
+
+  mapping for zgym_members {
+    member_id = member_id;
+    full_name = full_name;
+    member_type = member_type;
+    attendance_rate = attendance_rate;
+    last_visit_days = last_visit_days;
+    PredictionScore = retention_score;
+    StatusCriticality = criticality;
+  }
+}
